@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación Quind</title>
+    <!-- Importar tipografía Poppins con pesos Extra Bold (800) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 1. CONFIGURACIÓN Y PALETA DE COLORES */
+        :root {
+            --color-primary: #003844; /* Pantone 3035C */
+            --color-accent: #FFB81C;  /* Pantone 1235C */
+            --color-dark: #001928;    /* Pantone 5395C */
+            --color-white: #FFFFFF;
+        }
+
+        /* Reset global */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-dark);
+            overflow: hidden; /* Evitar scroll en pantalla */
+        }
+
+        /* Contenedor principal de la presentación */
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Estilos base para las diapositivas (Navegación Segura) */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            z-index: 0;
+            display: flex;
+            flex-direction: column;
+            pointer-events: none; /* Evita que las diapositivas ocultas bloqueen los clics de los botones */
+        }
+
+        .slide.active {
+            opacity: 1;
+            z-index: 1;
+            pointer-events: auto; /* Reactiva los clics solo en la diapositiva visible */
+        }
+
+        /* Utilidades de texto */
+        .text-light { font-weight: 300; }
+        .text-bold { font-weight: 700; }
+        .text-extrabold { font-weight: 800; }
+        .text-yellow { color: var(--color-accent); }
+        .text-primary { color: var(--color-primary); }
+        .text-right { text-align: right; }
+        .text-left { text-align: left; }
+        .text-center { text-align: center; width: 100%; }
+
+        /* --- CONTROLES DE NAVEGACIÓN --- */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 9999;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover { 
+            background: var(--color-accent); 
+            color: var(--color-dark); 
+        }
+
+        .nav-btn.prev { left: 15px; }
+        .nav-btn.next { right: 15px; }
+        
+        /* Indicador de diapositivas */
+        .slide-indicator {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px; 
+            z-index: 9999;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.3);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
+        .dot.active {
+            background-color: var(--color-accent);
+            transform: scale(1.3);
+        }
+
+        /* --- ICONO QUIND (ESQUINA INFERIOR DERECHA) --- */
+        .quind-icon {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            width: 25px;
+            height: auto;
+            z-index: 100;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quind-icon:hover {
+            transform: scale(1.2) rotate(5deg) !important;
+            filter: drop-shadow(0 0 8px rgba(255, 184, 28, 0.6));
+        }
+
+        /* --- CONTENEDOR ICONOS SOCIALES SLIDE 1 --- */
+        .social-icons-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .web-link {
+            display: inline-flex;
+            transition: all 0.3s ease;
+            margin-right: 2px;
+        }
+
+        .web-link:hover {
+            transform: translateY(-3px) scale(1.05);
+            filter: drop-shadow(0 4px 8px rgba(255, 184, 28, 0.4));
+        }
+        
+        .web-link img {
+            height: 34px; 
+            width: auto;
+            object-fit: contain;
+        }
+
+        .social-icons-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .social-link {
+            display: inline-flex;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            transform: translateY(-5px) scale(1.15);
+            filter: drop-shadow(0 4px 8px rgba(255, 184, 28, 0.4));
+        }
+        
+        .social-link img {
+            width: 42px; 
+            height: 42px;
+            object-fit: contain;
+        }
+
+
+        /* ==========================================
+           ESTILOS ESPECÍFICOS DE DIAPOSITIVAS
+           ========================================== */
+
+        /* --- DIAPOSITIVA 1 --- */
+        #slide-1 { background: var(--color-dark) url('https://d25ltszcjeom5i.cloudfront.net/194231/wwrvknkwpw/1.png') right center / cover no-repeat; }
+        #slide-1::before { content: ''; position: absolute; top: 0; left: 0; width: 60%; height: 100%; background: linear-gradient(to right, var(--color-dark) 40%, transparent 100%); z-index: 1; pointer-events: none; }
+        .slide-1-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 0 8vw; }
+        .main-title { color: var(--color-white); font-size: 5vw; line-height: 1.1; letter-spacing: -0.02em; }
+        .slide-footer { position: absolute; bottom: 40px; left: 8vw; right: 8vw; display: flex; justify-content: space-between; align-items: flex-end; z-index: 2; }
+        .logo-quind { height: 60px; width: auto; position: relative; left: 6vw; bottom: 25px; }
+
+        /* --- DIAPOSITIVA 2 --- */
+        #slide-2 { background-color: var(--color-dark); overflow: hidden; }
+        
+        .timeline-logo-patch {
+            position: absolute;
+            top: 50%;
+            left: 54%;
+            width: 76vw;
+            height: 76vh;
+            object-fit: contain;
+            transform: translate(-50%, -50%);
+            clip-path: polygon(65% 0, 100% 0, 100% 100%, 65% 100%);
+            z-index: 3;
+        }
+
+        .timeline-manual-wrapper {
+            position: absolute;
+            left: 46%;
+            top: 50%;
+            width: 92vw;
+            height: 92vh;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+        
+        .timeline-content, .timeline-line { 
+            position: absolute; 
+            top: 0;
+            left: 0;
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain;
+        }
+
+        .timeline-content { z-index: 2; }
+        .timeline-line { z-index: 1; }
+
+        /* --- DIAPOSITIVA 3 --- */
+        #slide-3 { background-color: var(--color-primary); }
+        .slide-title-3 { position: absolute; top: 8%; left: 8vw; color: var(--color-white); font-size: 4.5vw; line-height: 1.1; }
+        .diagram-container { position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); width: 65vw; height: 38vw; max-height: 75vh; }
+        .diagram-bar { position: absolute; top: 50%; left: 0; transform: translateY(-50%); width: 100%; height: 6vw; min-height: 55px; background-color: var(--color-accent); border-radius: 15px; display: flex; justify-content: space-between; align-items: center; padding: 0 5vw; z-index: 2; color: var(--color-dark); font-weight: 700; font-size: 1.35vw; line-height: 1.1; text-align: center; }
+        .diagram-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 23vw; height: 23vw; max-width: 320px; max-height: 320px; background-color: var(--color-white); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 700; color: var(--color-dark); font-size: 1.7vw; line-height: 1.15; z-index: 3; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
+        .diagram-box { position: absolute; background-color: var(--color-dark); border-radius: 12px; color: var(--color-white); padding: 1.2vw; text-align: center; font-weight: 700; font-size: 1.35vw; line-height: 1.15; z-index: 1; width: 17vw; min-height: 7vw; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); }
+        
+        .box-tl { top: 2.2vw; left: 4vw; } 
+        .box-tr { top: 2.2vw; right: 4vw; } 
+        .box-bl { bottom: 2.2vw; left: 4vw; } 
+        .box-br { bottom: 2.2vw; right: 4vw; }
+
+        /* --- DIAPOSITIVAS 4 a 7 --- */
+        #slide-4 { background: var(--color-dark) url('https://d25ltszcjeom5i.cloudfront.net/194231/zxgpxordca/2.png') right center / cover no-repeat; }
+        #slide-4::before { content: ''; position: absolute; top: 0; left: 0; width: 65%; height: 100%; background: linear-gradient(to right, var(--color-dark) 55%, transparent 100%); z-index: 1; pointer-events: none; }
+
+        #slide-5 { background: var(--color-dark) url('https://d25ltszcjeom5i.cloudfront.net/194231/yfeqhhjfra/3.png') left center / cover no-repeat; }
+        #slide-5::before { content: ''; position: absolute; top: 0; right: 0; width: 65%; height: 100%; background: linear-gradient(to left, var(--color-dark) 55%, transparent 100%); z-index: 1; pointer-events: none; }
+
+        #slide-6 { background: var(--color-dark) url('https://d25ltszcjeom5i.cloudfront.net/194231/ckmyxgnfah/4.png') right center / cover no-repeat; }
+        #slide-6::before { content: ''; position: absolute; top: 0; left: 0; width: 65%; height: 100%; background: linear-gradient(to right, var(--color-dark) 55%, transparent 100%); z-index: 1; pointer-events: none; }
+
+        #slide-7 { background: var(--color-dark) url('https://d25ltszcjeom5i.cloudfront.net/194231/muygxuzhdy/5.png') left center / cover no-repeat; }
+        #slide-7::before { content: ''; position: absolute; top: 0; right: 0; width: 65%; height: 100%; background: linear-gradient(to left, var(--color-dark) 55%, transparent 100%); z-index: 1; pointer-events: none; }
+
+        .yellow-ribbon { position: absolute; top: 10%; background-color: var(--color-accent); z-index: 2; color: var(--color-dark); font-size: clamp(24px, 3.2vw, 45px); line-height: 1.1; }
+        .yellow-ribbon.left { left: 0; padding: 1.5vh 4vw 1.5vh 8vw; border-radius: 0 60px 60px 0; text-align: left; }
+        .yellow-ribbon.right { right: 0; padding: 1.5vh 8vw 1.5vh 4vw; border-radius: 60px 0 0 60px; text-align: right; }
+        .info-area { position: absolute; top: 28%; bottom: 23%; width: 45vw; z-index: 2; color: var(--color-white); display: flex; flex-direction: column; justify-content: center; gap: 2vh; }
+        .info-area.left { left: 8vw; align-items: flex-start; text-align: left; } .info-area.right { right: 8vw; align-items: flex-end; text-align: right; }
+        .feature-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 1vh; margin: 0; }
+        .feature-list li { font-size: clamp(16px, 2vw, 28px); font-weight: 500; display: flex; align-items: flex-start; line-height: 1.2; text-align: left; }
+        .feature-list li::before { content: "•"; color: var(--color-white); font-size: clamp(16px, 2vw, 28px); margin-right: 15px; line-height: 1.2; }
+        .description { font-size: clamp(14px, 1.6vw, 22px); font-weight: 300; line-height: 1.5; margin: 0; width: 100%; }
+        
+        /* Imagen completa (PNG) de los logos superpuesta.
+           Esta regla "pointer-events: none" es vital para no tapar los botones de navegación 
+        */
+        .logos-fullscreen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 4; pointer-events: none; }
+
+        /* Ajuste de movimiento lateral */
+        .content-slide .logos-fullscreen.from-left { opacity: 0; transform: translateX(-100px); transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .content-slide .logos-fullscreen.from-right { opacity: 0; transform: translateX(100px); transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .content-slide.active .logos-fullscreen.from-left,
+        .content-slide.active .logos-fullscreen.from-right { opacity: 1; transform: translateX(0); transition-delay: 0.9s; }
+
+        /* --- DIAPOSITIVA 8 --- */
+        #slide-8 { background-color: var(--color-primary); }
+        .slide-8-title { position: absolute; top: 8%; left: 8vw; color: var(--color-white); font-size: clamp(32px, 4.5vw, 60px); line-height: 1.1; }
+        .slide-8-content-block { position: absolute; top: 40%; transform: translateY(-50%); left: 8vw; width: 48vw; z-index: 2; color: var(--color-white); }
+        .slide-8-description { font-size: clamp(16px, 2.1vw, 28px); font-weight: 300; line-height: 1.6; }
+        .slide-8-logo { position: absolute; right: 10vw; top: 50%; transform: translateY(-50%); width: 25vw; height: auto; z-index: 2; object-fit: contain; }
+
+        /* --- DIAPOSITIVA 9 --- */
+        #slide-9 { background-color: var(--color-dark); display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 7vh 5vw; }
+        
+        .ia-top-badge { background-color: var(--color-accent); color: var(--color-dark); padding: 6px 25px; border-radius: 50px; font-size: clamp(12px, 1.8vh, 18px); font-weight: 700; display: flex; align-items: center; gap: 10px; margin-bottom: 3vh; }
+        .ia-top-badge svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+        
+        .ia-main-title { color: var(--color-white); font-size: clamp(28px, 4.5vh, 45px); font-weight: 700; margin-bottom: 1.5vh; text-align: center; max-width: 1200px; }
+        .ia-subtitle { color: var(--color-white); font-size: clamp(14px, 2.1vh, 20px); font-weight: 300; max-width: 1200px; line-height: 1.5; margin-bottom: 5vh; text-align: center; }
+        
+        .ia-cards-container-v2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5vw; width: 90vw; max-width: 1250px; margin: 0 auto; align-items: stretch; }
+        
+        .ia-card-v2 { position: relative; display: flex; flex-direction: column; margin-top: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); border-radius: 20px; }
+        
+        .ia-card-v2-icon { position: absolute; top: -30px; left: -15px; width: 60px; height: 60px; background-color: var(--color-white); border: 4px solid var(--color-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; }
+        .ia-card-v2-icon svg { width: 30px; height: 30px; color: var(--color-dark); }
+        .ia-card-v2-top-pill { position: absolute; top: -20px; left: 20px; background-color: var(--color-accent); color: var(--color-dark); padding: 8px 25px 8px 35px; border-radius: 30px; font-weight: 800; font-size: clamp(14px, 2vh, 18px); z-index: 9; line-height: 1.2; text-align: left; }
+        
+        .ia-card-v2-white { background-color: var(--color-white); border-radius: 20px 20px 0 0; padding: 50px 25px 40px 25px; color: var(--color-dark); text-align: center; font-size: clamp(13px, 1.8vh, 16px); line-height: 1.5; flex-grow: 1; }
+        .ia-card-v2-primary { background-color: var(--color-primary); border-radius: 0 0 20px 20px; padding: 45px 20px 25px 20px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 160px; }
+        .ia-card-v2-mid-pill { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); background-color: var(--color-accent); color: var(--color-dark); font-weight: 800; font-size: clamp(16px, 2.2vh, 22px); padding: 8px 0; border-radius: 30px; width: 90%; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 5; }
+        
+        .ia-card-v2-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        .ia-card-v2-list li { color: var(--color-white); font-weight: 700; font-size: clamp(14px, 1.9vh, 18px); text-align: center; }
+        
+        .ia-card-v2-2cols { display: flex; justify-content: space-around; width: 100%; }
+        .ia-card-v2-2cols ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+        .ia-card-v2-2cols li { color: var(--color-white); font-weight: 700; font-size: clamp(14px, 1.9vh, 18px); text-align: left; }
+
+        /* --- DIAPOSITIVA 10 --- */
+        #slide-10 { background-color: var(--color-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3vh 5vw; }
+        .ia-cards-container.cols-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5vw; width: 85vw; max-width: 1300px; margin: 0 auto; align-items: stretch; padding-bottom: 3vh;}
+        .ia-card { position: relative; background-color: var(--color-white); border-radius: 16px; padding: 40px 1.5vw 25px 1.5vw; color: var(--color-dark); display: flex; flex-direction: column; justify-content: flex-start; box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-top: 30px; }
+        .ia-card-header-pill { position: absolute; top: -25px; left: -15px; height: 50px; width: calc(100% + 20px); background-color: var(--color-accent); border-radius: 50px; display: flex; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 10; }
+        .ia-card-header-icon-wrapper { position: absolute; left: -5px; top: 50%; transform: translateY(-50%); width: 60px; height: 60px; background-color: var(--color-white); border: 2px solid var(--color-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .ia-card-header-icon { width: 30px; height: 30px; color: var(--color-primary); }
+        .ia-card-title { font-size: clamp(16px, 2.1vh, 26px); font-weight: 700; color: var(--color-dark); line-height: 1.1; margin-left: 65px; padding-right: 10px; }
+        .ia-card-content-wrapper { display: flex; flex-direction: column; justify-content: center; margin-top: 2.5vh; flex-grow: 0; }
+        .ia-card-body { font-size: clamp(14px, 1.9vh, 22px); line-height: 1.5; font-weight: 400; text-align: center; margin-bottom: 0; }
+        .ia-card-bottom-section { position: relative; margin-top: 4vh; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 1vh; }
+        .ia-card-section-title { font-size: clamp(18px, 2.6vh, 32px); font-weight: 800; color: var(--color-primary); margin-bottom: 2vh; text-align: center; line-height: 1.1; letter-spacing: -0.02em; }
+        .ia-card-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 1.5vh; align-items: center; width: 100%; }
+        .ia-card-list.left-align { align-items: flex-start; text-align: left; }
+        .ia-card-list li { font-size: clamp(13px, 1.8vh, 20px); font-weight: 500; color: var(--color-dark); text-align: center; }
+        .ia-card-list.left-align li { text-align: left; line-height: 1.45; }
+        .slide-10-card-title { font-size: clamp(18px, 2.5vh, 28px); display: block; margin-bottom: 1vh; }
+
+        /* --- DIAPOSITIVA 11: Escalones y Logos a Pantalla Completa --- */
+        #slide-11 { background-color: var(--color-primary); display: flex; flex-direction: column; justify-content: center; padding: 0; overflow: hidden;}
+        .slide-title-11 { position: absolute; top: 8%; left: 8vw; z-index: 10; color: var(--color-white); font-size: clamp(32px, 4.5vw, 60px); line-height: 1.1; font-weight: 300; margin: 0; }
+
+        /* --- DIAPOSITIVA 12 --- */
+        #slide-12 { background: var(--color-dark) url('https://d25ltszcjeom5i.cloudfront.net/194231/oiktowznzl/6.png') left center / cover no-repeat; }
+        #slide-12::before { content: ''; position: absolute; top: 0; right: 0; width: 65%; height: 100%; background: linear-gradient(to left, var(--color-dark) 55%, transparent 100%); z-index: 1; pointer-events: none; }
+        .slide-12-content { position: absolute; right: 8vw; top: 50%; transform: translateY(-50%); z-index: 2; display: flex; flex-direction: column; align-items: flex-end; }
+        .slide-12-title { font-size: clamp(60px, 9vw, 120px); line-height: 1.1; margin-bottom: 2vh; color: var(--color-white); text-align: right; font-weight: 400; }
+        .slide-12-subtitle { font-size: clamp(20px, 2.5vw, 36px); font-weight: 400; color: var(--color-white); max-width: 45vw; text-align: right; line-height: 1.4; }
+
+        /* --- DIAPOSITIVAS 13 a 19 --- */
+        .split-slide { background-color: var(--color-dark); }
+        .split-slide::before { content: ''; position: absolute; top: 0; right: 0; width: 44%; height: 100%; z-index: 1; pointer-events: none; }
+        
+        #slide-13::before { background: url('https://d25ltszcjeom5i.cloudfront.net/194231/hbrcsvynhw/7.png') center center / cover no-repeat; }
+        #slide-14::before { background: url('https://d25ltszcjeom5i.cloudfront.net/194231/swivlrmocw/8.png') center center / cover no-repeat; }
+        #slide-15::before { background: url('https://d25ltszcjeom5i.cloudfront.net/194231/ljkatsuseb/9.png') center center / cover no-repeat; }
+        #slide-16::before { background: url('https://d25ltszcjeom5i.cloudfront.net/194231/exuatiwbji/10.png') center center / cover no-repeat; }
+        #slide-17::before { background: url('https://d25ltszcjeom5i.cloudfront.net/194231/btdxhnofbh/11.png') center center / cover no-repeat; }
+        #slide-18::before { background: url('https://d25ltszcjeom5i.cloudfront.net/194231/gywqoccfqc/12.png') center center / cover no-repeat; }
+        #slide-19::before { background: url('https://d25ltszcjeom5i.cloudfront.net/194231/vnihltwhcm/13.png') center center / cover no-repeat; }
+
+        .split-slide .slide-13-content { position: absolute; left: 8vw; top: 50%; transform: translateY(-50%); z-index: 2; width: 45vw; }
+        .split-slide .slide-13-title { font-size: clamp(32px, 3.5vw, 55px); line-height: 1.1; color: var(--color-white); font-weight: 400; margin-bottom: 3vh; }
+        .split-slide .slide-13-title .quote { color: var(--color-accent); font-weight: 700; }
+        .split-slide .slide-13-subtitle { color: var(--color-accent); font-weight: 700; font-size: clamp(16px, 1.8vw, 24px); margin-bottom: 0.5vh; }
+        .split-slide .slide-13-text { color: var(--color-white); font-size: clamp(13px, 1.4vw, 18px); font-weight: 300; line-height: 1.5; margin-bottom: 3vh; }
+        .split-slide .slide-13-list { list-style: none; padding: 0; margin: 0; }
+        .split-slide .slide-13-list li { color: var(--color-white); font-size: clamp(13px, 1.4vw, 18px); font-weight: 300; line-height: 1.5; margin-bottom: 1vh; display: flex; align-items: flex-start; }
+        .split-slide .slide-13-list li::before { content: "•"; margin-right: 15px; color: var(--color-white); font-size: clamp(13px, 1.4vw, 18px); }
+
+        /* --- DIAPOSITIVA 20: Etapas de Implementación --- */
+        #slide-20 { background-color: var(--color-primary); display: flex; flex-direction: column; justify-content: center; padding: 0 8vw; }
+        .slide-20-title { color: var(--color-white); font-size: clamp(36px, 4.5vw, 60px); font-weight: 300; margin-bottom: 8vh; line-height: 1.1; }
+        .etapas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6vh 4vw; width: 100%; max-width: 1400px; }
+        .etapa-item { display: flex; align-items: flex-start; gap: 2vw; }
+        .etapa-circle { position: relative; width: clamp(70px, 8vw, 110px); aspect-ratio: 1; background-color: var(--color-accent); border-radius: 50%; border: 2px solid var(--color-dark); box-shadow: 4px 4px 0px var(--color-dark); display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 800; font-size: clamp(14px, 1.8vw, 24px); color: var(--color-dark); line-height: 1.1; flex-shrink: 0; }
+        .etapa-line { position: absolute; top: 50%; right: -1.5vw; width: 1.5vw; height: 2px; background-color: var(--color-dark); transform: translateY(-50%); }
+        .etapa-dot { position: absolute; top: 50%; right: -1.8vw; width: 8px; height: 8px; background-color: white; border: 2px solid var(--color-dark); border-radius: 50%; transform: translateY(-50%); }
+        .etapa-title { color: var(--color-white); font-weight: 700; font-size: clamp(18px, 2.2vw, 30px); margin-bottom: 1vh; }
+        .etapa-list { list-style: none; padding: 0; margin: 0; }
+        .etapa-list li { color: var(--color-white); font-size: clamp(14px, 1.6vw, 22px); font-weight: 300; line-height: 1.4; margin-bottom: 0.8vh; display: flex; align-items: flex-start; }
+        .etapa-list li::before { content: "•"; margin-right: 10px; color: var(--color-white); }
+        .etapa-desc { color: var(--color-white); font-size: clamp(14px, 1.6vw, 22px); font-weight: 300; line-height: 1.4; margin: 0; }
+
+        /* --- DIAPOSITIVA 21: Comencemos --- */
+        #slide-21 { background-color: var(--color-primary); }
+        .slide-21-content { position: absolute; left: 8vw; top: 50%; transform: translateY(-50%); z-index: 2; width: 45vw; }
+        .slide-21-title { color: var(--color-accent); font-weight: 800; font-size: clamp(50px, 7vw, 100px); line-height: 1; margin-bottom: 3vh; position: relative; }
+        .slide-21-text { color: var(--color-white); font-size: clamp(16px, 2vw, 28px); font-weight: 300; line-height: 1.4; margin-bottom: 6vh; }
+        .slide-21-logo-container { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; margin-top: 2vh; }
+        .slide-21-logo-container img { width: 250px; height: auto; }
+        .slide-21-img { position: absolute; bottom: 0; right: 5vw; height: 85vh; width: auto; object-fit: contain; z-index: 2; }
+
+
+        /* ==========================================
+           ANIMACIONES GENERALES E INDEPENDIENTES
+           ========================================== */
+
+        /* Slide 1 */
+        #slide-1 .main-title { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        #slide-1.active .main-title { opacity: 1; transform: translateY(0); transition-delay: 0.4s; }
+        #slide-1 .slide-footer { opacity: 0; transform: translateY(20px); transition: all 0.8s ease; }
+        #slide-1.active .slide-footer { opacity: 1; transform: translateY(0); transition-delay: 0.6s; }
+
+        /* Slide 2 */
+        #slide-2 .timeline-logo-patch { opacity: 0; transform: translate(-48%, -50%); transition: all 1s ease; }
+        #slide-2.active .timeline-logo-patch { opacity: 1; transform: translate(-50%, -50%); transition-delay: 0.1s; }
+        #slide-2 .timeline-manual-wrapper { opacity: 0; transform: translate(-50%, -50%) scale(0.95); transition: all 0.8s ease; }
+        #slide-2.active .timeline-manual-wrapper { opacity: 1; transform: translate(-50%, -50%) scale(1); transition-delay: 0.3s; }
+        #slide-2 .timeline-line { opacity: 0; clip-path: inset(0 100% 0 0); transition: clip-path 1.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.1s ease; }
+        #slide-2.active .timeline-line { opacity: 1; clip-path: inset(0 0 0 0); transition-delay: 0.8s; }
+
+        /* Slide 3 */
+        #slide-3 .slide-title-3 { opacity: 0; transform: translateX(-30px); transition: all 0.8s ease; }
+        #slide-3.active .slide-title-3 { opacity: 1; transform: translateX(0); transition-delay: 0.2s; }
+        #slide-3 .diagram-center { opacity: 0; transform: translate(-50%, -50%) scale(0.5); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #slide-3.active .diagram-center { opacity: 1; transform: translate(-50%, -50%) scale(1); transition-delay: 0.3s; }
+        #slide-3 .diagram-bar { opacity: 0; transform: translateY(-50%) scaleX(0); transform-origin: center; transition: all 0.8s ease; }
+        #slide-3.active .diagram-bar { opacity: 1; transform: translateY(-50%) scaleX(1); transition-delay: 0.6s; }
+        #slide-3 .diagram-box { opacity: 0; transform: translateY(20px); transition: all 0.5s ease; }
+        #slide-3.active .box-tl { opacity: 1; transform: translateY(0); transition-delay: 0.9s; }
+        #slide-3.active .box-tr { opacity: 1; transform: translateY(0); transition-delay: 1.1s; }
+        #slide-3.active .box-bl { opacity: 1; transform: translateY(0); transition-delay: 1.3s; }
+        #slide-3.active .box-br { opacity: 1; transform: translateY(0); transition-delay: 1.5s; }
+
+        /* Slides 4, 5, 6, 7 */
+        .content-slide .yellow-ribbon.left { opacity: 0; transform: translateX(-100%); transition: all 0.8s ease; }
+        .content-slide.active .yellow-ribbon.left { opacity: 1; transform: translateX(0); transition-delay: 0.2s; }
+        .content-slide .yellow-ribbon.right { opacity: 0; transform: translateX(100%); transition: all 0.8s ease; }
+        .content-slide.active .yellow-ribbon.right { opacity: 1; transform: translateX(0); transition-delay: 0.2s; }
+        .content-slide .feature-list { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+        .content-slide.active .feature-list { opacity: 1; transform: translateY(0); transition-delay: 0.6s; }
+        .content-slide .description { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+        .content-slide.active .description { opacity: 1; transform: translateY(0); transition-delay: 0.8s; }
+        
+        .content-slide .logos-fullscreen.from-left { opacity: 0; transform: translateX(-100px); transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .content-slide .logos-fullscreen.from-right { opacity: 0; transform: translateX(100px); transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .content-slide.active .logos-fullscreen.from-left,
+        .content-slide.active .logos-fullscreen.from-right { opacity: 1; transform: translateX(0); transition-delay: 0.9s; }
+
+        /* Slide 8 */
+        #slide-8 .slide-8-title { opacity: 0; transform: translateX(-30px); transition: all 0.8s ease; }
+        #slide-8.active .slide-8-title { opacity: 1; transform: translateX(0); transition-delay: 0.2s; }
+        #slide-8 .slide-8-content-block { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+        #slide-8.active .slide-8-content-block { opacity: 1; transform: translateY(0); transition-delay: 0.4s; }
+        #slide-8 .slide-8-logo { opacity: 0; transform: translateY(-50%) scale(0.9); transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #slide-8.active .slide-8-logo { opacity: 1; transform: translateY(-50%) scale(1); transition-delay: 0.6s; }
+
+        /* Slide 9 */
+        .ia-slide .ia-top-badge { opacity: 0; transform: scale(0.8); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .ia-slide.active .ia-top-badge { opacity: 1; transform: scale(1); transition-delay: 0.1s; }
+        .ia-slide .ia-main-title { opacity: 0; transform: translateY(-20px); transition: all 0.8s ease; }
+        .ia-slide.active .ia-main-title { opacity: 1; transform: translateY(0); transition-delay: 0.3s; }
+        .ia-slide .ia-subtitle { opacity: 0; transform: translateY(-15px); transition: all 0.8s ease; }
+        .ia-slide.active .ia-subtitle { opacity: 1; transform: translateY(0); transition-delay: 0.4s; }
+        
+        #slide-9 .ia-card-v2 { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        #slide-9.active .ia-card-v2:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.5s; }
+        #slide-9.active .ia-card-v2:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.7s; }
+        #slide-9.active .ia-card-v2:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.9s; }
+
+        /* Slide 10 */
+        #slide-10 .ia-card { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        #slide-10.active .ia-card:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.5s; }
+        #slide-10.active .ia-card:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.7s; }
+        #slide-10.active .ia-card:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.9s; }
+        #slide-10.active .ia-card:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 1.1s; }
+
+        /* Slide 11 */
+        #slide-11 .slide-title-11 { opacity: 0; transform: translateX(-30px); transition: all 0.8s ease; }
+        #slide-11.active .slide-title-11 { opacity: 1; transform: translateX(0); transition-delay: 0.2s; }
+        
+        #slide-11 .logos-fullscreen { z-index: 5; opacity: 0; transform: translateX(-50px); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #slide-11.active .logo-s11-1 { opacity: 1; transform: translateX(0); transition-delay: 0.4s; }
+        #slide-11.active .logo-s11-2 { opacity: 1; transform: translateX(0); transition-delay: 0.6s; }
+        #slide-11.active .logo-s11-3 { opacity: 1; transform: translateX(0); transition-delay: 0.8s; }
+        #slide-11.active .logo-s11-4 { opacity: 1; transform: translateX(0); transition-delay: 1.0s; }
+
+        /* Slide 12 */
+        #slide-12 .slide-12-title { opacity: 0; transform: translateX(50px); transition: all 0.8s ease; }
+        #slide-12.active .slide-12-title { opacity: 1; transform: translateX(0); transition-delay: 0.3s; }
+        #slide-12 .slide-12-subtitle { opacity: 0; transform: translateX(50px); transition: all 0.8s ease; }
+        #slide-12.active .slide-12-subtitle { opacity: 1; transform: translateX(0); transition-delay: 0.5s; }
+
+        /* Slides 13 a 19 */
+        .split-slide .slide-13-title { opacity: 0; transform: translateX(-30px); transition: all 0.8s ease; }
+        .split-slide.active .slide-13-title { opacity: 1; transform: translateX(0); transition-delay: 0.2s; }
+        .split-slide .slide-13-section { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+        .split-slide.active .slide-13-section.antes { opacity: 1; transform: translateY(0); transition-delay: 0.5s; }
+        .split-slide.active .slide-13-section.ahora { opacity: 1; transform: translateY(0); transition-delay: 0.7s; }
+        .split-slide .slide-13-text { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+        .split-slide.active .slide-13-text { opacity: 1; transform: translateY(0); transition-delay: 0.5s; }
+
+        /* Slide 20 */
+        #slide-20 .slide-20-title { opacity: 0; transform: translateX(-30px); transition: all 0.8s ease; }
+        #slide-20.active .slide-20-title { opacity: 1; transform: translateX(0); transition-delay: 0.2s; }
+        #slide-20 .etapa-item { opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #slide-20.active .etapa-item:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0.4s; }
+        #slide-20.active .etapa-item:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.6s; }
+        #slide-20.active .etapa-item:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.8s; }
+        #slide-20.active .etapa-item:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 1.0s; }
+
+        /* Slide 21 */
+        #slide-21 .slide-21-title { opacity: 0; transform: translateX(-50px); transition: all 0.8s ease; }
+        #slide-21.active .slide-21-title { opacity: 1; transform: translateX(0); transition-delay: 0.3s; }
+        #slide-21 .slide-21-text { opacity: 0; transform: translateY(20px); transition: all 0.8s ease; }
+        #slide-21.active .slide-21-text { opacity: 1; transform: translateY(0); transition-delay: 0.5s; }
+        #slide-21 .slide-21-logo-container { opacity: 0; transform: scale(0.8); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #slide-21.active .slide-21-logo-container { opacity: 1; transform: scale(1); transition-delay: 0.7s; }
+        #slide-21 .slide-21-img { opacity: 0; transform: translateX(50px); transition: all 1s ease; }
+        #slide-21.active .slide-21-img { opacity: 1; transform: translateX(0); transition-delay: 0.6s; }
+
+        /* Icono Q general (esquina inferior) */
+        .slide.active .quind-icon { opacity: 1; transform: scale(1) rotate(0); transition-delay: 0.5s; }
+
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+
+        <!-- ==========================================
+             DIAPOSITIVA 1: Portada
+        =========================================== -->
+        <div class="slide active" id="slide-1">
+            <div class="slide-1-content">
+                <h1 class="main-title">
+                    <span class="text-light">Somos el</span><br>
+                    <span class="text-bold">equipo de TI</span><br>
+                    <span class="text-bold text-yellow">de tu equipo TI</span>
+                </h1>
+            </div>
+            
+            <div class="slide-footer">
+                <img src="https://d25ltszcjeom5i.cloudfront.net/130727/odgrqcnfxy/LOGO_QUIND_LETRA_BLANCA.svg" alt="Logo Quind" class="logo-quind">
+                
+                <div class="social-icons-wrapper">
+                    <a href="https://quind.io" target="_blank" class="web-link" title="Web">
+                        <img src="https://d25ltszcjeom5i.cloudfront.net/194231/kzaphtztdr/web.png" alt="www.quind.io">
+                    </a>
+                    
+                    <div class="social-icons-container">
+                        <a href="https://www.linkedin.com/company/quindsas/" target="_blank" class="social-link" title="LinkedIn">
+                            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/tdtltqtxmg/linkedind.png" alt="LinkedIn">
+                        </a>
+                        <a href="https://www.instagram.com/quindsas/" target="_blank" class="social-link" title="Instagram">
+                            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/jseimhoida/intagram.png" alt="Instagram">
+                        </a>
+                        <a href="https://open.spotify.com/show/0naNdWOAg1OeLuMAFXW7ZU?si=87bb881db6704323" target="_blank" class="social-link" title="Spotify">
+                            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/jftczpxcjm/spotify.png" alt="Spotify">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             DIAPOSITIVA 2: Línea de Tiempo / Evolución
+        =========================================== -->
+        <div class="slide" id="slide-2">
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/rceqfezkkp/Linea_de_tiempo.png" class="timeline-logo-patch" alt="Logo Quind">
+            <div class="timeline-manual-wrapper">
+                <img src="https://d25ltszcjeom5i.cloudfront.net/194231/ggrkyahuwm/Recurso_40.png" alt="Línea blanca" class="timeline-line">
+                <img src="https://d25ltszcjeom5i.cloudfront.net/194231/dwgowvhhpz/Recurso_39.png" alt="Iconos y texto" class="timeline-content">
+            </div>
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <!-- ==========================================
+             DIAPOSITIVA 3: Esquema de Servicios
+        =========================================== -->
+        <div class="slide" id="slide-3">
+            <h2 class="slide-title-3">
+                <span class="text-light">Esquema </span><span class="text-bold">de servicios</span>
+            </h2>
+            
+            <div class="diagram-container">
+                <div class="diagram-bar">
+                    <div>Developer<br>Experience</div>
+                    <div>Data<br>Centric</div>
+                </div>
+                <div class="diagram-center">Arquitectura<br>y servicios de<br>consultoría</div>
+                
+                <div class="diagram-box box-tl">Cloud<br>& Engineering<br>Services</div>
+                <div class="diagram-box box-tr">Smart Data,<br>IA & Analytics</div>
+                <div class="diagram-box box-bl">Management<br>& Quality<br>Services</div>
+                <div class="diagram-box box-br">Development<br>& Integration<br>Services</div>
+            </div>
+
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <!-- ==========================================
+             DIAPOSITIVA 4: Custom Dev & Software
+        =========================================== -->
+        <div class="slide content-slide" id="slide-4">
+            <div class="yellow-ribbon left">
+                <span class="text-bold">Custom Dev</span><br>
+                <span class="text-bold">& Software Integration</span>
+            </div>
+            
+            <div class="info-area left">
+                <ul class="feature-list">
+                    <li>Desarrollo SW a la medida</li>
+                    <li>Desarrollo de integraciones</li>
+                </ul>
+                <p class="description text-left">
+                    Arquitecturas de datos modernas<br>
+                    <span class="text-bold">Frontend, Backend y App móviles</span><br>
+                    hasta la arquitectura de soluciones<br>
+                    complejas y aplicaciones de streaming<br>
+                    para procesar datos en tiempo real.
+                </p>
+            </div>
+            
+            <!-- Logos a pantalla completa animando desde la izquierda -->
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/xrxdkbwzco/Recurso_42.png" class="logos-fullscreen from-left" alt="Tecnologías">
+            
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <!-- ==========================================
+             DIAPOSITIVA 5: Smart Data, IA & Analytics
+        =========================================== -->
+        <div class="slide content-slide" id="slide-5">
+            <div class="yellow-ribbon right">
+                <span class="text-bold">Smart Data,</span><br>
+                <span class="text-bold">IA & Analytics</span>
+            </div>
+            
+            <div class="info-area right">
+                <ul class="feature-list">
+                    <li>Ingeniería de datos</li>
+                    <li>Analítica de datos</li>
+                </ul>
+                <p class="description text-right">
+                    Arquitecturas de datos modernas<br>
+                    como <span class="text-bold">Data Lake, Data Warehouses,<br>
+                    Data Lakehouse</span> hasta la construcción<br>
+                    e implementación de estrategias de<br>
+                    analítica de datos.
+                </p>
+            </div>
+            
+            <!-- Logos a pantalla completa animando desde la derecha -->
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/qmuiurgenz/Recurso_43.png" class="logos-fullscreen from-right" alt="Tecnologías Data">
+            
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <!-- ==========================================
+             DIAPOSITIVA 6: Value Management
+        =========================================== -->
+        <div class="slide content-slide" id="slide-6">
+            <div class="yellow-ribbon left">
+                <span class="text-bold">Value Management</span><br>
+                <span class="text-bold">& Quality Assurance</span>
+            </div>
+            
+            <div class="info-area left">
+                <ul class="feature-list">
+                    <li>Automatización de pruebas</li>
+                    <li>Aseguramiento de calidad</li>
+                </ul>
+                <p class="description text-left">
+                    Eficiencia en los procesos dentro del<br>
+                    ciclo de vida del desarrollo del<br>
+                    software, asegurando una óptima<br>
+                    relación entre costo, tiempo y esfuerzo<br>
+                    en el aseguramiento de la calidad.
+                </p>
+            </div>
+            
+            <!-- Logos a pantalla completa animando desde la izquierda -->
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/vdxpcogdlb/Recurso_44.png" class="logos-fullscreen from-left" alt="Tecnologías QA">
+            
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <!-- ==========================================
+             DIAPOSITIVA 7: DevOps & Cloud
+        =========================================== -->
+        <div class="slide content-slide" id="slide-7">
+            <div class="yellow-ribbon right">
+                <span class="text-bold">DevOps & Cloud</span>
+            </div>
+            
+            <div class="info-area right">
+                <ul class="feature-list">
+                    <li>Automatización de<br>procesos de desarrollo<br>y delivery</li>
+                    <li>Infraestructura cloud</li>
+                </ul>
+                <p class="description text-right">
+                    Optimiza los procesos, generando<br>
+                    <span class="text-bold">mayor agilidad y eficiencia.</span><br>
+                    Administración de <span class="text-bold">tu propia nube.</span>
+                </p>
+            </div>
+            
+            <!-- Logos a pantalla completa animando desde la derecha -->
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/tsgddgylor/Recurso_45.png" class="logos-fullscreen from-right" alt="Tecnologías Cloud">
+            
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <!-- ==========================================
+             DIAPOSITIVA 8: Partner Autorizado GCP
+        =========================================== -->
+        <div class="slide" id="slide-8">
+            <h2 class="slide-8-title">
+                <span class="text-light">Partner </span><span class="text-bold">autorizado GCP</span>
+            </h2>
+
+            <div class="slide-8-content-block">
+                <p class="slide-8-description">
+                    Como <span class="text-bold text-yellow">Partner autorizado de Google Cloud Platform (GCP)</span>, en Quind impulsamos la transformación digital de nuestros clientes con soluciones escalables, seguras y listas para el futuro, respaldadas por la <span class="text-bold text-yellow">tecnología de Google</span>.
+                </p>
+            </div>
+
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/qyoxnzypwx/Recurso_17.png" class="slide-8-logo" alt="Google Cloud Partner Logo">
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <!-- ==========================================
+             DIAPOSITIVA 9: Tres Frentes de Inteligencia Artificial
+        =========================================== -->
+        <div class="slide ia-slide" id="slide-9">
+            
+            <div class="ia-top-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+                    <path d="M12 12L2.1 14.9"></path>
+                    <path d="M12 12l7.1-7.1"></path>
+                </svg>
+                Nuestra apuesta por la IA
+            </div>
+            
+            <h2 class="ia-main-title">Tres frentes para entregar valor con Inteligencia Artificial</h2>
+            <p class="ia-subtitle">
+                <span class="text-yellow text-bold">En Quind aplicamos IA de manera integral:</span> Construimos productos para el negocio, potenciamos a nuestro equipo con herramientas de mercado y diseñamos arquitecturas de agentes que automatizan el ciclo completo de delivery de software
+            </p>
+
+            <div class="ia-cards-container-v2">
+                
+                <!-- Tarjeta 1 -->
+                <div class="ia-card-v2">
+                    <div class="ia-card-v2-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        </svg>
+                    </div>
+                    <div class="ia-card-v2-top-pill">IA para tu negocio</div>
+                    
+                    <div class="ia-card-v2-white">
+                        <span class="text-bold">Diseñamos y construimos agentes y soluciones de IA aplicadas al core de negocio de cada cliente:</span> asistentes conversacionales, agente de dominio, smart data en tiempo real y modernización de sistemas legados
+                    </div>
+                    
+                    <div class="ia-card-v2-primary">
+                        <div class="ia-card-v2-mid-pill">Capacidades clave</div>
+                        <ul class="ia-card-v2-list">
+                            <li>Agentes conversacionales</li>
+                            <li>Smart Data</li>
+                            <li>RAG Corporativo</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2 -->
+                <div class="ia-card-v2">
+                    <div class="ia-card-v2-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="ia-card-v2-top-pill">Equipo Especializado<br>y Certificado</div>
+                    
+                    <div class="ia-card-v2-white">
+                        Nuestro talento <span class="text-bold">opera con herramientas de IA</span> del mercado integradas a su flujo de trabajo, lo que acelera la entrega de valor sin trasladar costos adicionales de licencias o tokens al cliente
+                    </div>
+                    
+                    <div class="ia-card-v2-primary">
+                        <div class="ia-card-v2-mid-pill">Herramientas Integradas</div>
+                        <div class="ia-card-v2-2cols">
+                            <ul>
+                                <li>Claude</li>
+                                <li>Geimi</li>
+                            </ul>
+                            <ul>
+                                <li>Cursor</li>
+                                <li>Copilot</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 3 -->
+                <div class="ia-card-v2">
+                    <div class="ia-card-v2-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="ia-card-v2-top-pill">Consultoría y Arquitectura<br>de Agentes</div>
+                    
+                    <div class="ia-card-v2-white">
+                        Acompañamos en el <span class="text-bold">diseño y construcción de arquitecturas de agentes</span> que autorizan el delivery de software de extremo a extremo, bajo la metodología <span class="text-bold">Spec Driven Development.</span>
+                    </div>
+                    
+                    <div class="ia-card-v2-primary">
+                        <div class="ia-card-v2-mid-pill">Metodología</div>
+                        <ul class="ia-card-v2-list">
+                            <li>Spec Driven Development</li>
+                            <li>Multi-Agent</li>
+                            <li>SDLC Automation</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <!-- ==========================================
+             DIAPOSITIVA 10: Quind AI Services & Agentic Lifecycle 
+        =========================================== -->
+        <div class="slide ia-slide" id="slide-10">
+            <h2 class="ia-main-title text-yellow">Quind AI Services & Agentic Lifecycle</h2>
+            <p class="ia-subtitle">
+                Empoderamos el talento humano con <span class="text-yellow text-bold">"compañeros digitales"</span> que eliminan la fricción operativa. Integramos Agentes de IA especializados en cada etapa del ciclo de vida de desarrollo
+            </p>
+
+            <div class="ia-cards-container cols-4">
+                <div class="ia-card">
+                    <div class="ia-card-header-pill">
+                        <div class="ia-card-header-icon-wrapper">
+                            <svg class="ia-card-header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-1.41 4.24-4.24 1.41 1.41-4.24z"/></svg>
+                        </div>
+                        <h3 class="ia-card-title">Estrategia y definición</h3>
+                    </div>
+                    <div class="ia-card-content-wrapper">
+                        <div class="ia-card-body">
+                            <span class="text-extrabold text-primary slide-10-card-title">Architecture & Consulting CoE</span>
+                        </div>
+                        <div class="ia-card-bottom-section">
+                            <ul class="ia-card-list left-align">
+                                <li><span class="text-bold">HU Creator:</span> Redacta y refina historias de usuario con criterios impecables.</li>
+                                <li><span class="text-bold">Estimador:</span> Predice esfuerzo basado en datos históricos reales.</li>
+                                <li><span class="text-bold">Arquitecto:</span> Genera diagramas y documenta ADRs en tiempo real.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ia-card">
+                    <div class="ia-card-header-pill">
+                        <div class="ia-card-header-icon-wrapper">
+                            <svg class="ia-card-header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 16 4-4-4-4M6 8l-4 4 4 4M14.5 4l-5 16"/></svg>
+                        </div>
+                        <h3 class="ia-card-title">Construcción Acelerada</h3>
+                    </div>
+                    <div class="ia-card-content-wrapper">
+                        <div class="ia-card-body">
+                            <span class="text-extrabold text-primary slide-10-card-title">Software Development CoE</span>
+                        </div>
+                        <div class="ia-card-bottom-section">
+                            <ul class="ia-card-list left-align">
+                                <li><span class="text-bold">Pair Programmer:</span> Copiloto contextualizado que no alucina código.</li>
+                                <li><span class="text-bold">The Brain:</span> Centraliza conocimiento y acelera el onboarding.</li>
+                                <li><span class="text-bold">Auto-Fixing:</span> Detecta errores y promueve correcciones automáticamente.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ia-card">
+                    <div class="ia-card-header-pill">
+                        <div class="ia-card-header-icon-wrapper">
+                            <svg class="ia-card-header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <h3 class="ia-card-title">Calidad y<br>seguridad</h3>
+                    </div>
+                    <div class="ia-card-content-wrapper">
+                        <div class="ia-card-body">
+                            <span class="text-extrabold text-primary slide-10-card-title">Quality Engineering CoE</span>
+                        </div>
+                        <div class="ia-card-bottom-section">
+                            <ul class="ia-card-list left-align">
+                                <li><span class="text-bold">Code Reviewer:</span> Primer filtro de revisión bajo estándares de industria.</li>
+                                <li><span class="text-bold">Test Creator:</span> Genera pruebas cubriendo "edge-cases" complejos.</li>
+                                <li><span class="text-bold">Self-Healing Tests:</span> Scripts que se auto-reparan ante cambios.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ia-card">
+                    <div class="ia-card-header-pill">
+                        <div class="ia-card-header-icon-wrapper">
+                            <svg class="ia-card-header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 3v18h18M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                        </div>
+                        <h3 class="ia-card-title">Gestión y<br>Visibilidad</h3>
+                    </div>
+                    <div class="ia-card-content-wrapper">
+                        <div class="ia-card-body">
+                            <span class="text-extrabold text-primary slide-10-card-title">Smart Data & Analytic CoE</span>
+                        </div>
+                        <div class="ia-card-bottom-section">
+                            <ul class="ia-card-list left-align">
+                                <li><span class="text-bold">PM AI:</span> Gestión predictiva conectada a Jira y al código.</li>
+                                <li><span class="text-bold">RAG KPI Agent:</span> Conecta a fuentes para extraer informes KPI (Riesgo).</li>
+                                <li><span class="text-bold">Ops Agent:</span> Automatización inteligente de procesos bancarios.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <!-- ==========================================
+             DIAPOSITIVA 11: Aliados (Diseño en Escalera)
+        =========================================== -->
+        <div class="slide" id="slide-11">
+            <h2 class="slide-title-11">
+                <span class="text-light">Algunos de </span><span class="text-bold text-yellow">nuestros aliados</span>
+            </h2>
+            
+            <!-- Logos exportados a pantalla completa con sus barras -->
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/svccbqsqrj/Recurso_46.png" class="logos-fullscreen logo-s11-1" alt="Logos Retail">
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/cywqqkcufw/Recurso_47.png" class="logos-fullscreen logo-s11-2" alt="Logos Financiero">
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/rshmnxancw/Recurso_48.png" class="logos-fullscreen logo-s11-3" alt="Logos Seguros">
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/pikqunrlbt/Recurso_49.png" class="logos-fullscreen logo-s11-4" alt="Logos Transporte">
+
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <!-- ==========================================
+             DIAPOSITIVA 12: Casos de éxito
+        =========================================== -->
+        <div class="slide" id="slide-12">
+            <div class="slide-12-content">
+                <h2 class="slide-12-title">
+                    <span class="text-light">Casos</span><br>
+                    <span class="text-bold text-yellow">de éxito</span>
+                </h2>
+                <p class="slide-12-subtitle">Cómo nuestras soluciones<br>marcan la diferencia</p>
+            </div>
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <!-- ==========================================
+             DIAPOSITIVAS 13 - 19: Formato Dividido
+        =========================================== -->
+        <div class="slide split-slide" id="slide-13">
+            <div class="slide-13-content">
+                <h2 class="slide-13-title">
+                    Toma de<br>decisiones<br>
+                    <span class="quote">“Recaudo”</span>
+                </h2>
+                <div class="slide-13-section antes">
+                    <h3 class="slide-13-subtitle">Antes</h3>
+                    <p class="slide-13-text">
+                        Información descentralizada, con procesamiento en períodos de tiempo largos, generando información obsoleta.
+                    </p>
+                </div>
+                <div class="slide-13-section ahora">
+                    <h3 class="slide-13-subtitle">Ahora</h3>
+                    <ul class="slide-13-list">
+                        <li>Garantizar información verídica y de valor.</li>
+                        <li>Obtener datos de flujo vehicular por horas, días, meses, años, sedes, etc.</li>
+                        <li>Tipo de recaudo por vehículo.</li>
+                        <li>Comparativa de datos actuales con históricos.</li>
+                    </ul>
+                </div>
+            </div>
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <div class="slide split-slide" id="slide-14">
+            <div class="slide-13-content">
+                <h2 class="slide-13-title">
+                    Transformando<br>la Experiencia<br>Corporativa<br>
+                    <span class="quote">“con Micro-Frontends”</span>
+                </h2>
+                <p class="slide-13-text">
+                    Impulsamos la innovación de <span class="text-bold">AFP Crecer</span> mediante <span class="text-bold">una arquitectura de micro-frontends</span>, diseñada para maximizar la disponibilidad y escalabilidad de aplicaciones a medida. Integrando <span class="text-bold">nuestros servicios de arquitectura, desarrollo, analítica, QA y DevOps</span>, entregamos una solución robusta que optimizó procesos, aceleró el time-to-market y elevó la experiencia del usuario a nuevos estándares.
+                </p>
+            </div>
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <div class="slide split-slide" id="slide-15">
+            <div class="slide-13-content">
+                <h2 class="slide-13-title">
+                    Impacto<br>
+                    <span class="quote">estratégico:</span>
+                </h2>
+                <p class="slide-13-text" style="margin-bottom: 2.5vh;">
+                    <span class="text-yellow text-bold">Alta Disponibilidad:</span> aplicaciones resilientes que garantizan continuidad operativa.
+                </p>
+                <p class="slide-13-text" style="margin-bottom: 2.5vh;">
+                    <span class="text-yellow text-bold">Agilidad:</span> reducción significativa en ciclos de desarrollo y despliegue.
+                </p>
+                <p class="slide-13-text">
+                    <span class="text-yellow text-bold">Experiencia Superior:</span> interfaces dinámicas y adaptables que potencian la satisfacción del usuario.
+                </p>
+            </div>
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <div class="slide split-slide" id="slide-16">
+            <div class="slide-13-content">
+                <h2 class="slide-13-title" style="margin-bottom: 3vh;">
+                    Reducción de<br>tiempo de<br>contratación<br>
+                    <span class="quote">“Optimización de modelo IA”</span>
+                </h2>
+                <div class="slide-13-section antes">
+                    <h3 class="slide-13-subtitle">Antes</h3>
+                    <p class="slide-13-text">
+                        El modelo de IA procesaba 50 hojas de vida en 5 minutos.
+                    </p>
+                </div>
+                <div class="slide-13-section ahora">
+                    <h3 class="slide-13-subtitle">Ahora</h3>
+                    <ul class="slide-13-list">
+                        <li>Consultas de información al lago de datos de empleados.</li>
+                        <li>El modelo de IA procesa 100 hojas de vida en 3 minutos, genera sugerencias de contratación y relaciona las hojas de vida más óptimas para el cargo de acuerdo a los parámetros.</li>
+                    </ul>
+                </div>
+            </div>
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <div class="slide split-slide" id="slide-17">
+            <div class="slide-13-content">
+                <h2 class="slide-13-title" style="margin-bottom: 3vh;">
+                    Crecimiento<br>en ventas<br>
+                    <span class="quote">“Mi Descuento”</span>
+                </h2>
+                <div class="slide-13-section antes">
+                    <h3 class="slide-13-subtitle">Antes</h3>
+                    <p class="slide-13-text">
+                        El modelo de IA procesaba 50 hojas de vida en 5 minutos.
+                    </p>
+                </div>
+                <div class="slide-13-section ahora">
+                    <h3 class="slide-13-subtitle">Ahora</h3>
+                    <ul class="slide-13-list">
+                        <li>Consultas de información al lago de datos de empleados.</li>
+                        <li>El modelo de IA procesa 100 hojas de vida en 3 minutos, genera sugerencias de contratación y relaciona las hojas de vida más óptimas para el cargo de acuerdo a los parámetros.</li>
+                    </ul>
+                </div>
+            </div>
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <div class="slide split-slide" id="slide-18">
+            <div class="slide-13-content">
+                <h2 class="slide-13-title" style="margin-bottom: 5vh;">
+                    Descuentos<br>personalizados
+                </h2>
+                <p class="slide-13-text" style="margin-bottom: 4vh;">
+                    Nuestros clientes han visto un aumento<br>significativo en sus ventas gracias a <span class="text-bold">nuestras<br>soluciones de personalización.</span>
+                </p>
+                <p class="slide-13-text">
+                    Al ofrecer descuentos y promociones<br>relevantes, <span class="text-bold text-yellow">hemos logrado aumentar la<br>satisfacción del cliente</span> y fomentar la<br>repetición de compras.
+                </p>
+            </div>
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <div class="slide split-slide" id="slide-19">
+            <div class="slide-13-content">
+                <h2 class="slide-13-title" style="margin-bottom: 3vh;">
+                    Localización<br>en tiempo real<br>
+                    <span class="quote">“Localización”</span>
+                </h2>
+                <div class="slide-13-section antes">
+                    <h3 class="slide-13-subtitle">Antes</h3>
+                    <p class="slide-13-text">
+                        Información descentralizada, con procesamiento en períodos de tiempo largos, generando información obsoleta.
+                    </p>
+                </div>
+                <div class="slide-13-section ahora">
+                    <h3 class="slide-13-subtitle">Ahora</h3>
+                    <ul class="slide-13-list">
+                        <li>Garantizar información verídica y de valor.</li>
+                        <li>Obtener datos de flujo vehicular por horas, días, meses, años, sedes, etc.</li>
+                        <li>Tipo de recaudo por vehículo.</li>
+                        <li>Comparativa de datos actuales con históricos.</li>
+                    </ul>
+                </div>
+            </div>
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <!-- ==========================================
+             DIAPOSITIVA 20: Etapas de Implementación
+        =========================================== -->
+        <div class="slide" id="slide-20">
+            <h2 class="slide-20-title">
+                <span class="text-light">Etapas de </span><span class="text-bold">implementación</span>
+            </h2>
+
+            <div class="etapas-grid">
+                <!-- Etapa 1 -->
+                <div class="etapa-item">
+                    <div class="etapa-circle">
+                        Etapa<br>1
+                        <div class="etapa-line"></div>
+                        <div class="etapa-dot"></div>
+                    </div>
+                    <div class="etapa-text">
+                        <h3 class="etapa-title">Diagnóstico:</h3>
+                        <ul class="etapa-list">
+                            <li>Entendimiento y análisis.</li>
+                            <li>Alineación de expectativas.</li>
+                            <li>Plan de acción.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Etapa 2 -->
+                <div class="etapa-item">
+                    <div class="etapa-circle">
+                        Etapa<br>2
+                        <div class="etapa-line"></div>
+                        <div class="etapa-dot"></div>
+                    </div>
+                    <div class="etapa-text">
+                        <h3 class="etapa-title">Sensibilización y piloto:</h3>
+                        <ul class="etapa-list">
+                            <li>Definiciones y generación de lineamientos.</li>
+                            <li>Implementación.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Etapa 3 -->
+                <div class="etapa-item">
+                    <div class="etapa-circle">
+                        Etapa<br>3
+                        <div class="etapa-line"></div>
+                        <div class="etapa-dot"></div>
+                    </div>
+                    <div class="etapa-text">
+                        <h3 class="etapa-title">Maduración:</h3>
+                        <p class="etapa-desc">Nuevas funcionalidades y evolución de las prácticas a diferentes procesos que se vayan identificando en las fases anteriores.</p>
+                    </div>
+                </div>
+
+                <!-- Etapa 4 -->
+                <div class="etapa-item">
+                    <div class="etapa-circle">
+                        Etapa<br>4
+                        <div class="etapa-line"></div>
+                        <div class="etapa-dot"></div>
+                    </div>
+                    <div class="etapa-text">
+                        <h3 class="etapa-title">Extensión:</h3>
+                        <p class="etapa-desc">Replicación de los lineamientos establecidos en el piloto para los demás equipos de la organización</p>
+                    </div>
+                </div>
+            </div>
+
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <!-- ==========================================
+             DIAPOSITIVA 21: Comencemos
+        =========================================== -->
+        <div class="slide" id="slide-21">
+            
+            <div class="slide-21-content">
+                <h2 class="slide-21-title">Comencemos</h2>
+                <p class="slide-21-text">
+                    <span class="text-bold">Potencia tu equipo con soluciones inteligentes:</span> confianza, conocimiento y el respaldo que tu equipo de TI merece.
+                </p>
+                <div class="slide-21-logo-container">
+                    <img src="https://d25ltszcjeom5i.cloudfront.net/130727/odgrqcnfxy/LOGO_QUIND_LETRA_BLANCA.svg" alt="Logo Quind">
+                </div>
+            </div>
+
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/maquvrqnuz/14.png" class="slide-21-img" alt="Potencia tu equipo">
+            <img src="https://d25ltszcjeom5i.cloudfront.net/194231/woltafesyw/Recurso_4.png" class="quind-icon" alt="Quind Isotipo" onclick="goToSlide(0)">
+        </div>
+
+        <!-- CONTROLES DE NAVEGACIÓN -->
+        <button class="nav-btn prev" onclick="prevSlide()">&#10094;</button>
+        <button class="nav-btn next" onclick="nextSlide()">&#10095;</button>
+        
+        <div class="slide-indicator" id="dots"></div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dotsContainer = document.getElementById('dots');
+
+        // Generar indicadores dinámicos
+        slides.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.className = `dot ${i === 0 ? 'active' : ''}`;
+            dot.onclick = () => goToSlide(i);
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = document.querySelectorAll('.dot');
+
+        function updateSlides() {
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === currentSlide);
+                if (dots[i]) dots[i].classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function nextSlide() { currentSlide = (currentSlide + 1) % slides.length; updateSlides(); }
+        function prevSlide() { currentSlide = (currentSlide - 1 + slides.length) % slides.length; updateSlides(); }
+        function goToSlide(n) { currentSlide = n; updateSlides(); }
+
+        document.addEventListener('keydown', (e) => {
+            if(e.key === "ArrowRight" || e.key === " ") nextSlide();
+            if(e.key === "ArrowLeft") prevSlide();
+        });
+    </script>
+</body>
+</html>
+```
